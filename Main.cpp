@@ -1,8 +1,6 @@
 #include <fstream>
-#include <string>
 #include <iostream>
-#include <cstring>
-#include <stack>
+#include <stdlib.h>
 using namespace std;
 
 void rotation_method(int val)
@@ -44,7 +42,7 @@ void division_method(int val, int *M)
 	else {
 		cout << "You tried to add value: " << value << endl;
 		cout << "Value " << M[position] << " already exists in position " << position << ", a collision has occurred." << endl;
-		system("PAUSE");
+		cin.get();
 	}
 
 }
@@ -57,8 +55,7 @@ int main() {
 	fin.open("integers.txt");
 	int val;
 	char choice;
-	int N = 1000;
-	int * M = new int[N]();
+	int * M = new int[1000]();
 
 	cout << "'a' for Division method, 'b' for division method." << endl;
 	cin >> choice;
