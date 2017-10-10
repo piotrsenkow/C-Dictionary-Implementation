@@ -1,6 +1,7 @@
 #include <fstream>
 #include <iostream>
 #include <stdlib.h>
+#include <string>
 using namespace std;
 
 int position_maker(int val) //created this method seperate from division method function for better structure and so that I can build a collision handling aspect to the method
@@ -10,7 +11,17 @@ int position_maker(int val) //created this method seperate from division method 
 	return position;
 }
 
-void rotation_method(int val)
+int absolute_value(int val) //method that creates the position in index by extracting three middle values out of the value to be hashed
+{
+	int value = val;
+	value = abs(value); //takes absolute value to get rid of negative signs
+	string middle = to_string(value); //converts the int to a string for char manipulation
+	middle = middle.substr(2,3); //extraction of 3 chars out of string starting at index 2 of string
+	value = stoi(middle); //conversion of string back to integer
+	return value;
+}
+
+/*void rotation_method(int val)
 {
 	int value = val;
 	if (value < 0) 
@@ -31,6 +42,30 @@ void rotation_method(int val)
 			lastNumber *= 10;
 		value += lastNumber;
 	}
+*/
+void middle_method(int mid, int val, int * M)
+{
+	int position = mid;
+	if(M[position]==0) //if empty position in array, hash the value in
+	{
+		M[position]=val; 
+		cout << val << " added to position " << position<<endl;
+	}
+	else //otherwise display where colision occured and collision handling  
+	{
+		cout << "You tried to add value: " << val << endl;
+		cout << "Value " << M[position] << " already exists in position " << position << ", a collision has occurred." << endl;
+		cin.get(); //pause
+		
+		position+=1; //we're going to try the position one higher than the one already attempted and see if its empty 
+		if (position==1000) //necessary condition because we do not want to try access a position in the array that doesn't exist 
+		{
+			position = 0; //resets position counter to zero 
+		}
+		cout << "Trying one position up at index " << position <<endl;
+		middle_method(position,val,M);
+	}
+	
 }
 
 void division_method(int pos, int val, int* M) //function that hashes in a division manner
@@ -47,7 +82,7 @@ void division_method(int pos, int val, int* M) //function that hashes in a divis
 	{
 		cout << "You tried to add value: " << value << endl;
 		cout << "Value " << M[position] << " already exists in position " << position << ", a collision has occurred." << endl;
-		cin.get();
+		cin.get(); //pause
 		
 		position+=1; //we're going to try the position one higher than the one already attempted and see if its empty 
 		if (position==1000) //necessary condition because we do not want to try access a position in the array that doesn't exist 
@@ -62,9 +97,6 @@ void division_method(int pos, int val, int* M) //function that hashes in a divis
 
 }
 
-
-
-
 int main() {
 	ifstream fin; //open an input file stream
 	fin.open("integers.txt"); //text file containing the integeres 
@@ -74,7 +106,7 @@ int main() {
 
 	cout << "'a' for division method, 'b' for rotation method." << endl;
 	cin >> choice;
-	if (choice == 'a' || 'A') {
+	if (choice == 'a') {
 		while (fin.peek() != EOF)
 		{
 			fin.get();
@@ -83,10 +115,13 @@ int main() {
 			division_method(pos,val, M); //method call for division method using the position makers value
 		}
 	}
-	else if (choice == 'b' || 'B') {
+	else if (choice == 'b') {
 		while (fin.peek() != EOF)
 		{
-
+			fin.get();
+			fin >> val;
+			int mid_value = absolute_value(val); //method for extracting the middle values from the integer 
+			middle_method(mid_value, val, M); //method for hashing using middle method
 
 		}
 
